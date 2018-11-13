@@ -1,4 +1,4 @@
-from PIL import Image 
+from PIL import Image
 
 # Get Object Orientational: convert this entire thing into classes and methods. 
 # Potential classes: FILE_OPEN_AND_CLEAN, ELEVATION_OPERATIONS, MAP CREATION, and more
@@ -17,20 +17,51 @@ max_height = (max(max(elevation_list)))
 
 
 elevation_to_colors = [[abs(round((each - min_height)/(max_height - min_height)*255)) for each in elevations] for elevations in elevation_list]
-"""Converts elevations into RGB scale 0-255 through every elevation in every list in larger list of lists. Notes to Steve: Abs is for absolute value, and is used bc this was returning negative values.  round is to ensure even intgers and not decimals.  Need to work on List Comprehensions.  These are so powerful, but this took me FOREVER!"""
+"""Converts elevations into RGB scale 0-255."""
 
 
 height = len(elevation_to_colors)
 width = len(elevation_to_colors[0])
 img = Image.new('RGB', (height, width))
-"""Image dimensions are height - # of lists, and width - # of rows, shown by [0]"""
+"""Image dimensions are height (# of lists), and width (# of rows, shown by [0])."""
 
 for y, row in enumerate(elevation_to_colors):
     for x, num in enumerate(row):
         img.putpixel((x, y), (num, num, num))
 
+
 img.save('steve_pathfinder_map.png')
+"""steve_pathfinder_map.png is operational!"""
 
-"""steve_pathfinder_map.png is operational!  Need to start plotting that course now."""
+
+def Y():
+    for y, row in enumerate(elevation_to_colors):
+        if abs(y - (y+1)) < y:
+            return (y+1)
+        elif abs(y - (y-1)) < y:
+            return (y-1)
+        elif abs(y - y) < (y+1):
+            return y
+        elif abs((y+1) - (y-1)) < y:
+            return ((y+1) or (y-1)).random
 
 
+# ImageDraw Attempt -- To do this, import ImageDraw above
+# im = Image.open('steve_pathfinder_map.png')
+# draw = ImageDraw.Draw(im)
+# draw.line((0, 300), ((x+1), Y), fill=128)
+# im.show()
+# im.save('steve_pathfinder_map_RED_LINE.png')
+
+# THIS GIVES A STRAIGHT LINE ACROSS! However when I try to take the function "Y" and stick it in the 2nd position for draw.line coordinates, the instrucitons are being met with error message:  
+# "Traceback (most recent call last):
+#   File "pathfinder.py", line 51, in <module>
+#     draw.line((0, 300), ((x+1), Y), fill=None)
+# TypeError: line() got multiple values for argument 'fill'"
+
+
+# putpixel Attempt
+im = Image.open('steve_pathfinder_map.png')
+im.putpixel((x+1), Y), (255, 0, 0)
+im.show()
+im.save('steve_pathfinder_map_RED_LINE.png')
